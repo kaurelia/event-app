@@ -1,0 +1,17 @@
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Event {
+  id Int @id @default(autoincrement()) @unique
+  name String @db.VarChar(100)
+  surname String @db.VarChar(100)
+  email String @db.VarChar(255)
+  date DateTime
+}
