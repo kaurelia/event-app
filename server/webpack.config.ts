@@ -1,7 +1,19 @@
 import { join } from "path";
+import nodeExternals from "webpack-node-externals";
+import packageJson from "./package.json";
+
 const setUpConfig = () => {
   return {
     target: "node",
+    externals: [
+      nodeExternals({
+        allowlist: [
+          ...Object.keys(packageJson.dependencies).filter((name) => {
+            return name !== "@prisma/client";
+          }),
+        ],
+      }),
+    ],
     entry: join(__dirname, "src", "index.ts"),
     mode: "production",
     module: {
@@ -14,7 +26,17 @@ const setUpConfig = () => {
             {
               loader: "babel-loader",
               options: {
-                presets: ["@babel/preset-typescript", "@babel/preset-env"],
+                presets: [
+                  "@babel/preset-typescript",
+                  [
+                    "@babel/preset-env",
+                    {
+                      bugfixes: true,
+                      useBuiltIns: "usage",
+                      corejs: "3",
+                    },
+                  ],
+                ],
               },
             },
           ],
@@ -22,7 +44,12 @@ const setUpConfig = () => {
       ],
     },
     output: { path: join(__dirname, "dist") },
-    resolve: { extensions: [".js", ".ts", ".json"] },
+    resolve: {
+      extensions: [".js", ".ts", ".json"],
+      alias: {
+        "~root": join(__dirname, "src"),
+      },
+    },
   };
 };
 export default setUpConfig;

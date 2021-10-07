@@ -23,7 +23,7 @@
     "skipLibCheck": true,
     "checkJs": true,
     "strictFunctionTypes": true,
-    "importHelpers": true,
+    "importHelpers": false,
     "baseUrl": "./src",
     "strictBindCallApply": true,
     "strictPropertyInitialization": true,
