@@ -7,12 +7,14 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: events
       POSTGRES_USER: root
       POSTGRES_PASSWORD: postgres
     volumes:
       - /var/lib/postgres
       - ./dbscripts/postgres:/docker-entrypoint-initdb.d
+    networks:
+      - fullstack
   pgadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
@@ -24,15 +26,29 @@ services:
       - "5050:80"
     depends_on:
       - postgres
+    networks:
+      - fullstack
   server:
     build: ./server
     restart: on-failure
     container_name: server
     ports:
       - "5001:5001"
+    networks:
+      - fullstack
+    depends_on:
+      - postgres
+      - pgadmin
   website:
     build: ./website
     restart: on-failure
     container_name: website
     ports:
       - "5000:5000"
+    networks:
+      - fullstack
+    depends_on:
+      - server
+networks:
+  fullstack:
+    driver: bridge

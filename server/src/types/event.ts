@@ -1,7 +1,7 @@
 type Event = {
   name: string;
   surname: string;
-  date: string;
+  date: string | Date;
   email: string;
 };
 

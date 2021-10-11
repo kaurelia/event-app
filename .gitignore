@@ -1,5 +1,7 @@
 node_modules
 dist
 .env
+.env.docker
 migrations
 yarn-error.log
+coverage
