@@ -16,7 +16,10 @@ const addEvent = async (request: Request, response: Response) => {
     );
   } catch (error) {
     if (error instanceof ValidationError) {
-      response.status(400).send({ error: error.errors });
+      response
+        .header("application/json")
+        .status(400)
+        .send({ error: error.errors });
       return;
     }
     response.header("application/json").sendStatus(500);
