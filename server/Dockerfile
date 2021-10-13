@@ -6,5 +6,6 @@ RUN yarn --ignore-engines
 RUN yarn run generate-schema
 RUN yarn run build
 RUN chmod +x ./start.sh
+RUN chmod +x ./test.sh
 EXPOSE 5001
-CMD ["./start.sh"]
+ENTRYPOINT ["./start.sh"]
