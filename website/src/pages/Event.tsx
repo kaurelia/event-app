@@ -1,24 +1,25 @@
 import TextField from "@mui/material/TextField";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
 import Box from "~root/component/Box";
 import { useState } from "react";
 import Stack from "@mui/material/Stack";
 import Container from "~root/component/Container";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
-import addEvent from "~root/EventApi/EventApi";
-import dateValidator from "~root/validation/dateValidation";
+import addEvent from "~root/eventApi/addEvent";
 import nameValidator from "~root/validation/nameValidator";
 import surnameValidator from "~root/validation/surnameValidator";
 import emailValidator from "~root/validation/emialValidator";
-
 import { ValidationError } from "yup";
-import { parseISO } from "date-fns";
+import DateTimePicker from "@mui/lab/DateTimePicker";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import dateValidator from "~root/validation/dateValidation";
+import { parse } from "date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 const Event = () => {
-  const [date, setDate] = useState<string | null>(null);
+  const [date, setDate] = useState<Date | null | string>(null);
   const [isDateValid, setIsDateValid] = useState(true);
   const [dateErrorMessage, setDateErrorMessage] = useState<string | null>(null);
 
@@ -31,14 +32,23 @@ const Event = () => {
   const [surname, setSurname] = useState("");
   const [isSurnameValid, setIsSurnameValid] = useState(true);
   const [surnameErrorMessage, setSurnameErrorMessage] = useState<string | null>(
-    null
+    null,
   );
 
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [emailErrorMessage, setEmailErrorMessage] = useState<string | null>(
-    null
+    null,
   );
+
+  const [displayToastType, setDisplayToastType] = useState<
+    null | "error" | "success"
+  >(null);
+  const [displayToast, setDisplayToast] = useState(false);
+
+  const closeAlert = () => {
+    setDisplayToast(false);
+  };
 
   return (
     <>
@@ -112,36 +122,52 @@ const Event = () => {
               }}
             />
             <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label="Choose date"
+              <DateTimePicker
+                label="DateTime picker"
                 value={date}
-                onChange={(newValue) => {
-                  setDate(newValue);
+                disablePast
+                minDateTime={new Date()}
+                onChange={(newDate) => {
+                  setIsDateValid(true);
+                  setDateErrorMessage(null);
+                  setDate(newDate);
                 }}
-                renderInput={(params) => (
-                  <TextField
-                    helperText={dateErrorMessage}
-                    error={!isDateValid}
-                    onChange={async (event) => {
-                      try {
-                        const date = parseISO(event.target.value);
-                        await dateValidator.validate(date, {
-                          strict: true,
-                        });
-                        setIsDateValid(true);
-                        setDateErrorMessage(null);
-                      } catch (error) {
-                        setIsDateValid(false);
-                        if (error instanceof ValidationError) {
-                          setDateErrorMessage(error.message);
+                inputFormat="dd/MM/yyyy HH:mm"
+                renderInput={(params) => {
+                  const inputProps = {
+                    ...params.inputProps,
+                    "data-testid": "date-input",
+                  };
+                  return (
+                    <TextField
+                      {...params}
+                      helperText={dateErrorMessage}
+                      error={!isDateValid}
+                      inputProps={inputProps}
+                      onChange={async (event) => {
+                        try {
+                          const date = parse(
+                            event.target.value,
+                            "dd/MM/yyyy HH:mm",
+                            new Date(),
+                          );
+                          if (event.target.value) {
+                            await dateValidator.validate(date, {
+                              strict: true,
+                            });
+                          }
+                          setIsDateValid(true);
+                          setDateErrorMessage(null);
+                        } catch (error) {
+                          setIsDateValid(false);
+                          if (error instanceof ValidationError) {
+                            setDateErrorMessage(error.message);
+                          }
                         }
-                      }
-                    }}
-                    inputProps={{ "data-testid": "date-input" }}
-                    data-testid="date-input"
-                    {...params}
-                  />
-                )}
+                      }}
+                    />
+                  );
+                }}
               />
             </LocalizationProvider>
             <Button
@@ -157,13 +183,25 @@ const Event = () => {
                   Boolean(date)
                 )
               }
-              onClick={() => {
-                addEvent({
-                  name: firstName,
-                  surname: surname,
-                  date: date,
-                  email: email,
-                });
+              data-testid={"send-event-button"}
+              onClick={async () => {
+                try {
+                  const response = await addEvent({
+                    name: firstName,
+                    surname: surname,
+                    date: date as Date,
+                    email: email,
+                  });
+                  if ((await response).ok) {
+                    setDisplayToastType("success");
+                  } else {
+                    setDisplayToastType("error");
+                  }
+                } catch (e) {
+                  setDisplayToastType("error");
+                } finally {
+                  setDisplayToast(true);
+                }
               }}
               variant="contained"
               endIcon={<SendIcon />}
@@ -173,6 +211,20 @@ const Event = () => {
           </Stack>
         </Box>
       </Container>
+      <Snackbar
+        open={displayToast}
+        autoHideDuration={6000}
+        onClose={closeAlert}
+      >
+        <MuiAlert
+          variant="filled"
+          onClose={closeAlert}
+          severity={displayToastType as "error" | "success"}
+          sx={{ width: "100%" }}
+        >
+          {displayToastType === "success" ? "Added event" : "Error"}
+        </MuiAlert>
+      </Snackbar>
     </>
   );
 };

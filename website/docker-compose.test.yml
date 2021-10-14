@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  server:
+    build: .
+    entrypoint: yarn run jest --coverage
+    restart: on-failure
+    ports:
+      - "5000:5000"
+    networks:
+      - fullstack
+networks:
+  fullstack:
+    driver: bridge

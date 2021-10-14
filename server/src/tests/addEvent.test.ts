@@ -8,7 +8,7 @@ afterAll(() => {
 const correctEvent = {
   name: "Test",
   surname: "Test",
-  date: new Date(),
+  date: new Date(2050, 1, 1),
   email: "test@test.com",
 };
 

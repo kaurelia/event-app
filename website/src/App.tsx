@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import Event2 from "~root/component/Event";
+import EventPage from "~root/pages/Event";
 import GlobalStyle from "./component/GlobalStyle";
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
       <Router>
         <Switch>
           <Route exact path="/">
-            <Event2 />
+            <EventPage />
           </Route>
         </Switch>
       </Router>

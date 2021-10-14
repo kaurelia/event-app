@@ -10,7 +10,7 @@ const addEvent = async (request: Request, response: Response) => {
   let date: Date;
   try {
     date = parseISO(dateAsString as string);
-    await eventValidator.validate(
+    await eventValidator(new Date()).validate(
       { name, surname, email, date },
       { abortEarly: false, strict: true },
     );

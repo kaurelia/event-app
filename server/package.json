@@ -8,7 +8,7 @@
     "build": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack --config webpack.config.ts",
     "generate-schema": "prisma generate",
     "migration": "prisma migrate dev",
-    "test": "docker-compose -f docker-compose.test.yml up --abort-on-container-exit"
+    "test": "docker-compose -f docker-compose.test.yml build & docker-compose -f docker-compose.test.yml up --abort-on-container-exit"
   },
   "dependencies": {
     "@prisma/client": "^3.2.0",

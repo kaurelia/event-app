@@ -35,5 +35,4 @@
 
 - backend tests
   1. cd server
-  2. docker run -d -p 5432:5432 -e POSTGRES_DB=events -e POSTGRES_USER=root -e POSTGRES_PASSWORD=postgres -v - /var/lib/postgres -v %PROJECT_FOLDER_ROOT%/dbscripts/postgres:/docker-entrypoint-initdb.d --restart on-failure postgres:latest
-  3. yarn run test
+  2. yarn run test

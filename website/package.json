@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env serve -s dist -l 5000",
     "build": "cross-env TS_NODE_PROJECT=tsconfig.webpack.json webpack --config webpack.config.ts",
-    "test": "jest --coverage"
+    "test": "docker-compose -f docker-compose.test.yml build & docker-compose -f docker-compose.test.yml up --abort-on-container-exit"
   },
   "dependencies": {
     "@emotion/react": "^11.4.1",

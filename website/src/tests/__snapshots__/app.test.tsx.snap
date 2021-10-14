@@ -731,13 +731,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root emotion-3"
-          data-testid="date-input"
         >
           <label
             class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-root MuiFormLabel-colorPrimary emotion-16"
             data-shrink="false"
           >
-            Choose date
+            DateTime picker
           </label>
           <div
             class="MuiOutlinedInput-root MuiInputBase-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-17"
@@ -747,6 +746,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
               aria-label="Choose date"
               aria-readonly="true"
               class="MuiOutlinedInput-input MuiInputBase-input emotion-18"
+              data-testid="date-input"
               readonly=""
               type="text"
               value=""
@@ -759,7 +759,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
                 class="emotion-20"
               >
                 <span>
-                  Choose date
+                  DateTime picker
                 </span>
               </legend>
             </fieldset>
@@ -767,6 +767,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-18:focus::-ms-input-
         </div>
         <button
           class="MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root Mui-disabled emotion-21"
+          data-testid="send-event-button"
           disabled=""
           tabindex="-1"
           type="button"

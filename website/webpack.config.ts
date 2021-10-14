@@ -39,6 +39,10 @@ const setUpConfig = () => {
         },
       ],
     },
+    experiments: {
+      topLevelAwait: true,
+      outputModule: true,
+    },
     output: { path: join(__dirname, "dist") },
     resolve: {
       extensions: [".jsx", ".tsx", ".json", ".js", ".ts"],
